@@ -1,52 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+  <meta charset="UTF-8">
   <title>Galería de Modelos 3D y RA</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fafafa;}
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fafafa; }
     h1 { text-align: center; margin-top: 1em; }
-    .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 1em; margin-bottom: 2em;}
+    .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 1em; margin-bottom: 2em; }
     .gallery-item { text-align: center; }
-    .controls { display: flex; justify-content: center; gap: 2em; flex-wrap: wrap; margin-bottom: 2em;}
-    .model-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 2em;}
-    model-viewer { width: 350px; height: 350px; border-radius: 12px; background: #fff; box-shadow: 0 2px 12px #0001;}
-    .toggle-btn { margin-top: 0.5em;}
-    img { object-fit: contain; }
+    .controls { display: flex; justify-content: center; gap: 2em; flex-wrap: wrap; margin-bottom: 2em; }
+    .model-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 2em; }
+    model-viewer { width: 350px; height: 350px; border-radius: 12px; background: #fff; box-shadow: 0 2px 12px #0001; }
+    .toggle-btn { margin-top: 0.5em; }
   </style>
 </head>
 <body>
   <h1>Galería interactiva de modelos 3D y RA</h1>
-  <div class="gallery" id="gallery">
-    <!-- Miniaturas de los modelos -->
-  </div>
-  <div class="controls" id="controls">
-    <!-- Botones de activación/desactivación -->
-  </div>
-  <div class="model-container" id="modelContainer">
-    <!-- Modelos visualizados -->
-  </div>
+  <div class="gallery" id="gallery"></div>
+  <div class="controls" id="controls"></div>
+  <div class="model-container" id="modelContainer"></div>
+
   <script>
-    // Lista de modelos. Cambia el nombre y la imagen a tu gusto.
+    // Lista de modelos (solo GLB)
     const models = [
-      { name: 'ARQ', file: 'ARQ.glb', poster: 'ARQ.png' },
-      { name: 'EST', file: 'EST.glb', poster: 'EST.png' },
-      { name: 'HDR', file: 'HDR.glb', poster: 'HDR.png' },
-      { name: 'ELE', file: 'ELE.glb', poster: 'ELE.png' },
-      { name: 'HVAC', file: 'HVAC.glb', poster: 'HVAC.png' },
-      { name: 'RCI', file: 'RCI.glb', poster: 'RCI.png' },
+      { name: 'ARQ', file: 'ARQ.glb' },
+      { name: 'EST', file: 'EST.glb' },
+      { name: 'HDR', file: 'HDR.glb' },
+      { name: 'ELE', file: 'ELE.glb' },
+      { name: 'HVAC', file: 'HVAC.glb' },
+      { name: 'RCI', file: 'RCI.glb' },
     ];
 
     // Estado de visualización de cada modelo
     const activeModels = models.map(() => false);
 
-    // Renderiza la galería de miniaturas
+    // Renderiza la galería de botones
     function renderGallery() {
       const gallery = document.getElementById('gallery');
       gallery.innerHTML = models.map((model, i) => `
         <div class="gallery-item">
-          <img src="${model.poster}" alt="${model.name}" width="100" height="100" style="border-radius:8px; box-shadow:0 1px 6px #0001;">
-          <div>${model.name}</div>
+          <div><strong>${model.name}</strong></div>
           <button class="toggle-btn" onclick="toggleModel(${i})">
             ${activeModels[i] ? 'Ocultar' : 'Mostrar'}
           </button>
@@ -54,7 +48,7 @@
       `).join('');
     }
 
-    // Renderiza los controles de activación/desactivación
+    // Renderiza los controles globales
     function renderControls() {
       const controls = document.getElementById('controls');
       controls.innerHTML =
@@ -73,7 +67,6 @@
             ar-modes="webxr scene-viewer quick-look"
             camera-controls
             auto-rotate
-            poster="${model.poster}"
             alt="${model.name}">
           </model-viewer>
         ` : ''
