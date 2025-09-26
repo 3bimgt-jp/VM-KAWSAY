@@ -1,170 +1,30 @@
 [README.md](https://github.com/user-attachments/files/22548526/README.md)
-# Galería interactiva de modelos GLB en Realidad Aumentada
+Este repositorio contiene un visor 3D en línea de las diferentes disciplinas de un proyecto BIM.  
+Los modelos fueron exportados en formato `.glb` y se pueden visualizar directamente desde cualquier navegador moderno gracias a **Three.js**.
 
-Este repositorio incluye una galería web para visualizar varios modelos `.glb` en 3D y Realidad Aumentada (RA) usando [Google Model Viewer](https://modelviewer.dev/). Puedes activar/desactivar la visualización de cada modelo para explorar su comportamiento de manera individual o grupal.
+## 🌐 Acceso al visor
 
----
+👉 [Abrir visor en línea](https://3bimgt-jp.github.io/VM-KAWSAY/)  
 
-## ¿Cómo funciona la galería?
+## 📂 Disciplinas incluidas
 
-- **Visualiza todos los modelos a la vez o selecciona cuáles mostrar.**
-- **Activa/desactiva la visualización de cada modelo con un solo clic.**
-- **Explora los modelos en RA desde dispositivos compatibles.**
-- **Galería de miniaturas para seleccionar el modelo que deseas ver.**
+- 🏛️ Arquitectura (`ARQ.glb`)
+- 🏗️ Estructura (`EST.glb`)
+- 🚰 Hidrosanitarias (`HDR.glb`)
+- 🔥 Red contra incendios (`RCI.glb`)
+- ⚡ Eléctrica (`ELE.glb`)
+- ❄️ HVAC (`HVAC.glb`)
 
----
+## 🕹️ Controles de uso
 
-## Estructura de archivos
+- Haz **clic en los checkboxes** para encender o apagar cada disciplina.  
+- Usa el **mouse** para rotar, acercar o alejar el modelo.  
+- Mantén presionado **Shift + arrastrar** para desplazar la vista (pan).  
 
-Los modelos `.glb` se encuentran en la raíz del repositorio:
+## 📸 Capturas
 
-```
-/
-  ├── ARQ.glb
-  ├── EST.glb
-  ├── HDR.glb
-  ├── ELE.glb
-  ├── HVAC.glb
-  └── RCI.glb
-```
+![Ejemplo visor](docs/screenshot.png)
 
 ---
 
-## Ejemplo de galería interactiva
-
-Guarda el siguiente código como `index.html` en tu repositorio, en la raíz junto a tus modelos `.glb`.
-
-```html
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Galería de Modelos 3D y RA</title>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #fafafa; }
-    h1 { text-align: center; margin-top: 1em; }
-    .gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 1em; margin-bottom: 2em; }
-    .gallery-item { text-align: center; }
-    .controls { display: flex; justify-content: center; gap: 2em; flex-wrap: wrap; margin-bottom: 2em; }
-    .model-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 2em; }
-    model-viewer { width: 350px; height: 350px; border-radius: 12px; background: #fff; box-shadow: 0 2px 12px #0001; }
-    .toggle-btn { margin-top: 0.5em; }
-  </style>
-</head>
-<body>
-  <h1>Galería interactiva de modelos 3D y RA</h1>
-  <div class="gallery" id="gallery"></div>
-  <div class="controls" id="controls"></div>
-  <div class="model-container" id="modelContainer"></div>
-
-  <script>
-    // Lista de modelos (solo GLB)
-    const models = [
-      { name: 'ARQ', file: 'ARQ.glb' },
-      { name: 'EST', file: 'EST.glb' },
-      { name: 'HDR', file: 'HDR.glb' },
-      { name: 'ELE', file: 'ELE.glb' },
-      { name: 'HVAC', file: 'HVAC.glb' },
-      { name: 'RCI', file: 'RCI.glb' },
-    ];
-
-    // Estado de visualización de cada modelo
-    const activeModels = models.map(() => false);
-
-    // Renderiza la galería de botones
-    function renderGallery() {
-      const gallery = document.getElementById('gallery');
-      gallery.innerHTML = models.map((model, i) => `
-        <div class="gallery-item">
-          <div><strong>${model.name}</strong></div>
-          <button class="toggle-btn" onclick="toggleModel(${i})">
-            ${activeModels[i] ? 'Ocultar' : 'Mostrar'}
-          </button>
-        </div>
-      `).join('');
-    }
-
-    // Renderiza los controles globales
-    function renderControls() {
-      const controls = document.getElementById('controls');
-      controls.innerHTML =
-        `<button onclick="showAll()">Mostrar todos</button>
-         <button onclick="hideAll()">Ocultar todos</button>`;
-    }
-
-    // Renderiza los modelos activos
-    function renderModels() {
-      const container = document.getElementById('modelContainer');
-      container.innerHTML = models.map((model, i) =>
-        activeModels[i] ? `
-          <model-viewer
-            src="${model.file}"
-            ar
-            ar-modes="webxr scene-viewer quick-look"
-            camera-controls
-            auto-rotate
-            alt="${model.name}">
-          </model-viewer>
-        ` : ''
-      ).join('');
-    }
-
-    // Funciones de control
-    window.toggleModel = function(i) {
-      activeModels[i] = !activeModels[i];
-      renderGallery();
-      renderModels();
-    }
-
-    window.showAll = function() {
-      activeModels.fill(true);
-      renderGallery();
-      renderModels();
-    }
-
-    window.hideAll = function() {
-      activeModels.fill(false);
-      renderGallery();
-      renderModels();
-    }
-
-    // Inicializa la galería
-    renderGallery();
-    renderControls();
-    renderModels();
-  </script>
-</body>
-</html>
-```
-
-- Cambia las rutas de las imágenes (`ARQ.png`, `EST.png`, etc.) si tienes miniaturas, o elimina el atributo `poster` si no tienes imágenes.
-- Los modelos se cargarán directamente desde la raíz del repositorio.
-
----
-
-## ¿Cómo agregar más modelos o imágenes?
-
-1. Coloca tus archivos `.glb` y sus imágenes de miniatura (`.png`) en la raíz del repositorio.
-2. Modifica la lista `models` en el HTML para agregar el nombre y las rutas de tus nuevos modelos.
-
----
-
-## ¿Cómo visualizar en Realidad Aumentada?
-
-- Haz clic en el icono de RA de cada modelo (disponible en dispositivos compatibles).
-- Puedes activar uno o varios modelos para observar su comportamiento combinado.
-
----
-
-## Requisitos
-
-- Navegador moderno compatible con [model-viewer](https://modelviewer.dev/).
-- Dispositivo móvil para RA (Android/iOS).
-- Las imágenes de miniatura son opcionales, pero recomendadas para la galería.
-
----
-
-## Créditos y contribuciones
-
-Este repositorio está cerrado a nuevas expansiones, pero puedes clonar o adaptar la galería a tus necesidades.
+✍️ *Desarrollado como parte del proyecto de visualización BIM interactiva.*
